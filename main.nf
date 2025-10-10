@@ -5,7 +5,7 @@ workflow {
     fastq1 = Channel.fromPath(params.fastq1)
     fastq2 = Channel.fromPath(params.fastq2)
     ch_ref = Channel.fromPath(params.ref)
-    noise_file = Channel.fromPath(params.noise_file) // TODO: make noise file
+    noise_file = Channel.fromPath(params.noise_file) //TODO: make noise file
     RGSM = params.RGSM
     RGID = params.RGID
     intermediate_dir = Channel.value(params.intermediate_dir)
@@ -19,7 +19,7 @@ workflow {
         RGSM,
         RGID,
         ch_ref,
-        noise_file
+        noise_file,
         intermediate_dir,
         prefix,
         output_dir,
