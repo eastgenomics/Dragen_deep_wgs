@@ -70,7 +70,7 @@ process run_dragen {
         --enable-sort true \\
         --enable-duplicate-marking true \\
         --enable-variant-caller true \\
-        --vc-systematic-noise {noise_file} \\
+        --vc-systematic-noise ${noise_file} \\
         --intermediate-results-dir ${intermediate_dir} \\
         --output-file-prefix ${prefix} \\
         --output-directory ${output_dir} \\
