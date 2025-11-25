@@ -3,8 +3,10 @@ nextflow.enable.dsl = 2
 workflow {
 
     normal_fastq_list = Channel.fromPath(params.normal_fastq_list)
+    normal_RGSM = Channel.value(params.RGSM)
     ch_ref = Channel.fromPath(params.ref)
     tumor_fastq_list = Channel.fromPath(params.tumor_fastq_list)
+    tumor_RGSM = Channel.value(params.RGSM)
     noise_file = Channel.fromPath(params.noise_file)
     intermediate_dir = Channel.value(params.intermediate_dir)
     prefix = Channel.value(params.prefix)
@@ -13,7 +15,9 @@ workflow {
 
     run_dragen(
         normal_fastq_list,
+        normal_RGSM,
         tumor_fastq_list,
+        tumor_RGSM,
         ch_ref,
         noise_file,
         intermediate_dir,
@@ -34,7 +38,9 @@ process run_dragen {
     
     input:
     path normal_fastq_list
+    val normal_RGSM
     path tumor_fastq_list
+    val tumor_RGSM
     path ref_gz
     path noise_file
     val intermediate_dir
@@ -56,7 +62,9 @@ process run_dragen {
     /opt/edico/bin/dragen \\
         -r ref_data \\
         --tumor-fastq-list ${tumor_fastq_list} \\
+        --tumor-fastq-list-sample-id ${tumor_RGSM} \\
         --fastq-list ${normal_fastq_list}\\
+        --fastq-list-sample-id ${normal_RGSM} \\
         --enable-map-align true \\
         --enable-map-align-output true \\
         --enable-sort true \\
