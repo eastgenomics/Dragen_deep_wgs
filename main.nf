@@ -2,15 +2,9 @@ nextflow.enable.dsl = 2
 
 workflow {
 
-    fastq1 = Channel.fromPath(params.fastq1)
-    fastq2 = Channel.fromPath(params.fastq2)
+    normal_fastq_list = Channel.fromPath(params.normal_fastq_list)
     ch_ref = Channel.fromPath(params.ref)
-    RGSM = params.RGSM
-    RGID = params.RGID
-    fastq1_tumor = Channel.fromPath(params.fastq1_tumor)
-    fastq2_tumor = Channel.fromPath(params.fastq2_tumor)
-    RGSM_tumor = params.RGSM_tumor
-    RGID_tumor = params.RGID_tumor
+    tumor_fastq_list = Channel.fromPath(params.tumor_fastq_list)
     noise_file = Channel.fromPath(params.noise_file)
     intermediate_dir = Channel.value(params.intermediate_dir)
     prefix = Channel.value(params.prefix)
@@ -18,14 +12,8 @@ workflow {
     lic = Channel.value(params.lic)
 
     run_dragen(
-        fastq1,
-        fastq2,
-        RGSM,
-        RGID,
-        fastq1_tumor,
-        fastq2_tumor,
-        RGSM_tumor,
-        RGID_tumor,
+        normal_fastq_list,
+        tumor_fastq_list,
         ch_ref,
         noise_file,
         intermediate_dir,
@@ -45,14 +33,8 @@ process run_dragen {
     publishDir "${params.output_dir}", mode: 'copy'
     
     input:
-    path fastq1
-    path fastq2
-    val RGSM
-    val RGID
-    path fastq1_tumor
-    path fastq2_tumor
-    val RGSM_tumor
-    val RGID_tumor
+    path normal_fastq_list
+    path tumor_fastq_list
     path ref_gz
     path noise_file
     val intermediate_dir
@@ -73,14 +55,8 @@ process run_dragen {
 
     /opt/edico/bin/dragen \\
         -r ref_data \\
-        --tumor-fastq1 ${fastq1_tumor} \\
-        --tumor-fastq2 ${fastq2_tumor} \\
-        --RGSM-tumor ${RGSM_tumor} \\
-        --RGID-tumor ${RGID_tumor} \\
-        --fastq-file1 ${fastq1} \\
-        --fastq-file2 ${fastq2} \\
-        --RGSM ${RGSM} \\
-        --RGID ${RGID} \\
+        --tumor-fastq-list ${tumor_fastq_list} \\
+        --fastq-list ${normal_fastq_list}\\
         --enable-map-align true \\
         --enable-map-align-output true \\
         --enable-sort true \\
