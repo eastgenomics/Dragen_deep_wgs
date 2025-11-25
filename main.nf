@@ -3,10 +3,10 @@ nextflow.enable.dsl = 2
 workflow {
 
     normal_fastq_list = Channel.fromPath(params.normal_fastq_list)
-    normal_RGSM = Channel.value(params.RGSM)
+    normal_RGSM = Channel.value(params.normal_RGSM)
     ch_ref = Channel.fromPath(params.ref)
     tumor_fastq_list = Channel.fromPath(params.tumor_fastq_list)
-    tumor_RGSM = Channel.value(params.RGSM)
+    tumor_RGSM = Channel.value(params.tumor_RGSM)
     noise_file = Channel.fromPath(params.noise_file)
     intermediate_dir = Channel.value(params.intermediate_dir)
     prefix = Channel.value(params.prefix)
