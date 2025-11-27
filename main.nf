@@ -77,8 +77,8 @@ process run_dragen {
         --tumor-fastq2 ${tumor_fastq2} \\
         --RGSM-tumor ${tumor_RGSM} \\
         --RGID-tumor ${tumor_RGID} \\
-        --fastq1 ${normal_fastq1}\\
-        --fastq2 ${normal_fastq2} \\
+        --fastq-file1 ${normal_fastq1}\\
+        --fastq-file2 ${normal_fastq2} \\
         --RGSM ${normal_RGSM} \\
         --RGID ${normal_RGID} \\
         --enable-map-align true \\
