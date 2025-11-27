@@ -2,11 +2,13 @@ nextflow.enable.dsl = 2
 
 workflow {
 
-    ch_normal_fastq_list = Channel.fromPath(params.normal_fastq_list)
+    ch_normal_fastq1 = Channel.fromPath(params.normal_fastq1)
+    ch_normal_fastq2 = Channel.fromPath(params.normal_fastq2)
     ch_normal_RGSM = Channel.value(params.normal_RGSM)
     ch_normal_RGID = Channel.value(params.normal_RGID)
     ch_ref = Channel.fromPath(params.ref)
-    ch_tumor_fastq_list = Channel.fromPath(params.tumor_fastq_list)
+    ch_tumor_fastq1 = Channel.fromPath(params.tumor_fastq1)
+    ch_tumor_fastq2 = Channel.fromPath(params.tumor_fastq2)
     ch_tumor_RGSM = Channel.value(params.tumor_RGSM)
     ch_tumor_RGID = Channel.value(params.tumor_RGID)
     ch_noise_file = Channel.fromPath(params.noise_file)
@@ -16,10 +18,12 @@ workflow {
     ch_lic = Channel.value(params.lic)
 
     run_dragen(
-        ch_normal_fastq_list,
+        ch_normal_fastq1,
+        ch_normal_fastq2,
         ch_normal_RGSM,
         ch_normal_RGID,
-        ch_tumor_fastq_list,
+        ch_tumor_fastq1,
+        ch_tumor_fastq2,
         ch_tumor_RGSM,
         ch_tumor_RGID,
         ch_ref,
@@ -41,10 +45,12 @@ process run_dragen {
     publishDir "${params.output_dir}", mode: 'copy'
     
     input:
-    path normal_fastq_list
+    path normal_fastq1
+    path normal_fastq2
     val normal_RGSM
     val normal_RGID
-    path tumor_fastq_list
+    path tumor_fastq1
+    path tumor_fastq2
     val tumor_RGSM
     val tumor_RGID
     path ref_gz
@@ -67,12 +73,12 @@ process run_dragen {
 
     /opt/edico/bin/dragen \\
         -r ref_data \\
-        --tumor-fastq1 ${tumor_fastq_list} \\
-        --tumor-fastq2 ${tumor_RGSM} \\
+        --tumor-fastq1 ${tumor_fastq1} \\
+        --tumor-fastq2 ${tumor_fastq2} \\
         --RGSM-tumor ${tumor_RGSM} \\
         --RGID-tumor ${tumor_RGID} \\
-        --fastq1 ${normal_fastq_list}\\
-        --fastq2 ${normal_RGSM} \\
+        --fastq1 ${normal_fastq1}\\
+        --fastq2 ${normal_fastq2} \\
         --RGSM ${normal_RGSM} \\
         --RGID ${normal_RGID} \\
         --enable-map-align true \\
