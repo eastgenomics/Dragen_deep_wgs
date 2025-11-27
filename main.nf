@@ -2,28 +2,32 @@ nextflow.enable.dsl = 2
 
 workflow {
 
-    normal_fastq_list = Channel.fromPath(params.normal_fastq_list)
-    normal_RGSM = Channel.value(params.normal_RGSM)
+    ch_normal_fastq_list = Channel.fromPath(params.normal_fastq_list)
+    ch_normal_RGSM = Channel.value(params.normal_RGSM)
+    ch_normal_RGID = Channel.value(params.normal_RGID)
     ch_ref = Channel.fromPath(params.ref)
-    tumor_fastq_list = Channel.fromPath(params.tumor_fastq_list)
-    tumor_RGSM = Channel.value(params.tumor_RGSM)
-    noise_file = Channel.fromPath(params.noise_file)
-    intermediate_dir = Channel.value(params.intermediate_dir)
-    prefix = Channel.value(params.prefix)
-    output_dir = Channel.value(params.output_dir)
-    lic = Channel.value(params.lic)
+    ch_tumor_fastq_list = Channel.fromPath(params.tumor_fastq_list)
+    ch_tumor_RGSM = Channel.value(params.tumor_RGSM)
+    ch_tumor_RGID = Channel.value(params.tumor_RGID)
+    ch_noise_file = Channel.fromPath(params.noise_file)
+    ch_intermediate_dir = Channel.value(params.intermediate_dir)
+    ch_prefix = Channel.value(params.prefix)
+    ch_output_dir = Channel.value(params.output_dir)
+    ch_lic = Channel.value(params.lic)
 
     run_dragen(
-        normal_fastq_list,
-        normal_RGSM,
-        tumor_fastq_list,
-        tumor_RGSM,
+        ch_normal_fastq_list,
+        ch_normal_RGSM,
+        ch_normal_RGID,
+        ch_tumor_fastq_list,
+        ch_tumor_RGSM,
+        ch_tumor_RGID,
         ch_ref,
-        noise_file,
-        intermediate_dir,
-        prefix,
-        output_dir,
-        lic
+        ch_noise_file,
+        ch_intermediate_dir,
+        ch_prefix,
+        ch_output_dir,
+        ch_lic
     )
 }
 
@@ -39,8 +43,10 @@ process run_dragen {
     input:
     path normal_fastq_list
     val normal_RGSM
+    val normal_RGID
     path tumor_fastq_list
     val tumor_RGSM
+    val tumor_RGID
     path ref_gz
     path noise_file
     val intermediate_dir
@@ -61,10 +67,14 @@ process run_dragen {
 
     /opt/edico/bin/dragen \\
         -r ref_data \\
-        --tumor-fastq-list ${tumor_fastq_list} \\
-        --tumor-fastq-list-sample-id ${tumor_RGSM} \\
-        --fastq-list ${normal_fastq_list}\\
-        --fastq-list-sample-id ${normal_RGSM} \\
+        --tumor-fastq1 ${tumor_fastq_list} \\
+        --tumor-fastq2 ${tumor_RGSM} \\
+        --RGSM-tumor ${tumor_RGSM} \\
+        --RGID-tumor ${tumor_RGID} \\
+        --fastq1 ${normal_fastq_list}\\
+        --fastq2 ${normal_RGSM} \\
+        --RGSM ${normal_RGSM} \\
+        --RGID ${normal_RGID} \\
         --enable-map-align true \\
         --enable-map-align-output true \\
         --enable-sort true \\
